@@ -174,6 +174,18 @@ for col in num_cols:
 # Outlier Detection Process
 ###################################################################
 def outlier_thresholds(dataframe, col_name, q1=0.25, q3=0.75):
+    """
+    Calculate the lower and upper limits for identifying outliers in a given column of a dataframe.
+
+    Parameters:
+    dataframe (pandas.DataFrame): The dataframe containing the column.
+    col_name (str): The name of the column.
+    q1 (float, optional): The lower quartile value. Defaults to 0.25.
+    q3 (float, optional): The upper quartile value. Defaults to 0.75.
+
+    Returns:
+    tuple: A tuple containing the lower and upper limits for identifying outliers.
+    """
     quartile1 = dataframe[col_name].quantile(q1)
     quartile3 = dataframe[col_name].quantile(q3)
     interquantile_range = quartile3 - quartile1
@@ -210,11 +222,23 @@ for col in num_cols:
 ###################################################################
 # To See the Available Outliers
 ###################################################################
-def grab_outliers(dataframe, col_name, index=False):
+def grab_outliers(dataframe, col_name, index=False, h=5):
+    """
+    Prints or returns the outliers in a given column of a dataframe.
+
+    Parameters:
+    - dataframe (pandas.DataFrame): The dataframe containing the data.
+    - col_name (str): The name of the column to analyze.
+    - index (bool, optional): Whether to return the indices of the outliers. Default is False.
+    - h (int, optional): The number of rows to display when printing outliers. Default is 5.
+
+    Returns:
+    - outlier_index (pandas.Index): The indices of the outliers, if index=True. Otherwise, None.
+    """
     low, up = outlier_thresholds(dataframe, col_name)
 
     if dataframe[((dataframe[col_name] < low) | (dataframe[col_name] > up))].shape[0] > 10:
-        print(dataframe[((dataframe[col_name] < low) | (dataframe[col_name] > up))].head())
+        print(dataframe[((dataframe[col_name] < low) | (dataframe[col_name] > up))].head(h))
     else:
         print(dataframe[((dataframe[col_name] < low) | (dataframe[col_name] > up))])
 

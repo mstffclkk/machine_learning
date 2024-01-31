@@ -24,24 +24,33 @@ def load():
 df = load()
 df.head()
 
+# df info
 check_df(df)
 
+# numerical ,categorical and cardinal variables
 cat_cols, num_cols, cat_but_car = grab_col_names(df)
 
-a, b, c = grab_col_name(df)
+num_cols = [col for col in num_cols if col not in "PassengerId"]
 
+# categorical variables summary
 list(map(lambda x: cat_summary(df, x, plot=False), cat_cols))
+
+# numerical variables summary
 list(map(lambda x: num_summary(df, x, plot=False), num_cols))
 
+# outlier check
 for col in num_cols:
     print(col, check_outlier(df, col))
 
+# outlier thresholds
 for col in num_cols:
     print(col, outlier_thresholds(df, col))
 
+# catch outlier index
 for col in num_cols:
-    print(col, "-->", grab_outliers(df, col, True))  
+    print(col, "-->", grab_outliers(df, col, index=True))  
 
-
+age_index = grab_outliers(df, "Age", index=True)
+fare_index = grab_outliers(df, "Fare", index=True)
 
 
