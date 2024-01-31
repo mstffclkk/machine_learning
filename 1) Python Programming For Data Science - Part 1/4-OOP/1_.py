@@ -1,40 +1,40 @@
 # class
 
-class VeriBilimci():
-    print("Bu bir sınıftır.")
+class Scientist():
+    print("Bu bir siniftir.")
 
 # class attributes
 
-class VeriBilimci():
+class Scientist():
     bolum = ''
     sql = 'Evet'
     deneyim_yili = 0
     bildigi_diller = []
 
-# siniflarin ozelliklerine erişmek.
-VeriBilimci.sql
-VeriBilimci.bildigi_diller
+# Accessing the properties of classes.
+Scientist.sql
+Scientist.bildigi_diller
 
 # siniflarin ozelliklerini degistirmek.
-VeriBilimci.sql = 'Hayir'
+Scientist.sql = 'Hayir'
 
 # sinif ornegi (instance)
 
-ali = VeriBilimci()
+ali = Scientist()
 ali.sql
 ali.deneyim_yili
 ali.bolum
 ali.bildigi_diller.append('Python')
 
 
-veli = VeriBilimci()
+veli = Scientist()
 veli.sql
 veli.deneyim_yili
 veli.bolum
 veli.bildigi_diller # veli'nin bildigi dilleri ali'nin bildigi dilleri ile ayni.!!!!!!
 
 # ornek ozellikleri
-class VeriBilimci():
+class Scientist():
     bolum = ''
     def __init__(self):
         self.bildigi_diller = []
@@ -43,12 +43,12 @@ class VeriBilimci():
         print("init fonksiyonu cagirildi.")
 
 
-VeriBilimci().bildigi_diller
-VeriBilimci().bolum
-VeriBilimci().sql
-VeriBilimci().deneyim_yili
+Scientist().bildigi_diller
+Scientist().bolum
+Scientist().sql
+Scientist().deneyim_yili
 
-ali = VeriBilimci()
+ali = Scientist()
 ali.bildigi_diller = ['Python', 'R']         # 1. yol
 ali.bildigi_diller.append('Python')     # 2. yol
 ali.bolum = 'istatistik' 
@@ -56,7 +56,7 @@ ali.sql = 'Evet'
 ali.deneyim_yili = 1
 
 
-veli = VeriBilimci()
+veli = Scientist()
 veli.bildigi_diller = ['SAS', 'SPSS']
 # veli.bildigi_diller.append(['R', 'Python']) # bu kısmı anlamadım.
 veli.bolum = 'end_muh'
@@ -65,7 +65,7 @@ veli.deneyim_yili = 0
 
 
 # ornek metodlari
-class VeriBilimci(): 
+class Scientist(): 
     calisanlar = []                             # class attributes (sınıf nitelikleri)
     def __init__(self):                         # constructor (yapıcı metod)
         self.bildigi_diller = []                
@@ -73,12 +73,12 @@ class VeriBilimci():
     def dil_ekle(self, yeni_dil):               # instance method (örnek metodu)
         self.bildigi_diller.append(yeni_dil)   
 
-ali = VeriBilimci()                             # ali bir VeriBilimci objesi
+ali = Scientist()                             # ali bir VeriBilimci objesi
 ali.bildigi_diller 
 ali.bolum
 ali.dil_ekle('R') 
 
-veli = VeriBilimci()
+veli = Scientist()
 veli.bildigi_diller
 veli.dil_ekle('Python')
 

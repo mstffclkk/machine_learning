@@ -33,9 +33,8 @@ s.tail(3)
 #############################################
 import pandas as pd
 
-df = pd.read_csv("D:/Users/github_repo/Miuul_Machine_Learning_Bootcamp/Datasets/advertising.csv")
+df = pd.read_csv("datasets/advertising.csv")
 df.head()
-# pandas cheatsheet
 
 #############################################
 # Veriye Hızlı Bakış (Quick Look at Data)
@@ -48,6 +47,7 @@ df.head()                   # ilk 5 gözlem
 df.tail()                   # son 5 gözlem
 df.shape                    # boyut bilgisi
 df.info()                   # veri seti hakkında bilgi
+df.axes                     # satır ve sütunlar hakkında bilgi
 df.columns                  # değişken isimleri
 df.index                    # index bilgisi
 df.describe().T             # betimsel istatistikler

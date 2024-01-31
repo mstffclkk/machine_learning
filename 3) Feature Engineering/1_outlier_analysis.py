@@ -1,4 +1,3 @@
-
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -16,13 +15,31 @@ pd.set_option('display.max_rows', None)
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 pd.set_option('display.width', 500)
 
-
 def load():
-    data = pd.read_csv("/home/mustafa/github_repo/Miuul_Machine_Learning_Bootcamp/Datasets/titanic.csv") # vscode
+    data = pd.read_csv("/home/mustafa/github_repo/machine_learning/datasets/titanic.csv") 
     return data
 
 df = load()
 df.head()
+
+sns.boxplot(x=df["Age"])
+plt.show()
+
+#############################################
+# Finding Outliers
+#############################################
+
+q1 = df["Age"].quantile(0.25)
+q3 = df["Age"].quantile(0.75)
+iqr = q3 - q1
+up_limit = q3 + 1.5 * iqr
+low_limit = q1 - 1.5 * iqr
+
+df[(df["Age"] < low_limit) | (df["Age"] > up_limit)] # outlier values
+df[(df["Age"] < low_limit) | (df["Age"] > up_limit)].index # outlier index
+df[(df["Age"] < low_limit) | (df["Age"] > up_limit)].any(axis=None) # outlier var mı yok mu
+
+# Function
 
 def outlier_thresholds(dataframe, col_name, q1=0.25, q3=0.75):
     quartile1 = dataframe[col_name].quantile(q1)
@@ -160,3 +177,7 @@ remove_outlier(df, "Age").shape          # aykırı değerleri silme ama atama y
 replace_with_thresholds(df, "Age")       # aykırı değerleri baskılama, threshold ile değiştir.
 check_outlier(df, "Age")                 # aykırı değerleri kontrol et.
 
+a = [2,4,6,8]
+ 
+for i in a:
+    print(i**2)

@@ -46,11 +46,11 @@ def check_df(dataframe, head=5):
     print("\n##################### NA #####################")
     print(dataframe.isnull().sum())
     print("\n##################### Not in 0 for NA #####################")
-    print(df.isnull().sum()[df.isnull().sum() != 0])
+    print(dataframe.isnull().sum()[dataframe.isnull().sum() != 0])
     print("\n##################### Quantiles #####################")
     print(dataframe.describe([0, 0.05, 0.50, 0.95, 0.99, 1]).T)
     print("\n##################### Value Counts #####################")
-    print([df[col].value_counts() for col in df.columns if df[col].nunique() < 10])
+    print([dataframe[col].value_counts() for col in dataframe.columns if dataframe[col].nunique() < 10])
 
 
 

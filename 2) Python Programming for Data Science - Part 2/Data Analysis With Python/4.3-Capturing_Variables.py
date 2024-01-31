@@ -47,10 +47,10 @@ def grab_col_names(dataframe, cat_th=10, car_th=20):
     cat_cols = [col for col in dataframe.columns if str(dataframe[col].dtypes) in ["category", "object", "bool"]]
 
     num_but_cat = [col for col in dataframe.columns if
-                   dataframe[col].nunique() < 10 and dataframe[col].dtypes in ["int64", "float64", "int32", "float32"]]
+                   dataframe[col].nunique() < cat_th and dataframe[col].dtypes in ["int64", "float64", "int32", "float32"]]
 
     cat_but_car = [col for col in dataframe.columns if
-                   dataframe[col].nunique() > 20 and str(dataframe[col].dtypes) in ["category", "object"]]
+                   dataframe[col].nunique() > car_th and str(dataframe[col].dtypes) in ["category", "object"]]
 
     cat_cols = cat_cols + num_but_cat
     cat_cols = [col for col in cat_cols if col not in cat_but_car]
