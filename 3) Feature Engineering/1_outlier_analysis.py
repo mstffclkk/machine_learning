@@ -29,11 +29,12 @@ plt.show()
 # Finding Outliers
 #############################################
 
-q1 = df["Age"].quantile(0.25)
-q3 = df["Age"].quantile(0.75)
-iqr = q3 - q1
-up_limit = q3 + 1.5 * iqr
-low_limit = q1 - 1.5 * iqr
+q1 = df["Age"].quantile(0.25) # 1. çeyrek
+q3 = df["Age"].quantile(0.75) # 3. çeyrek
+iqr = q3 - q1                 # interquartile range
+th = 1.5                      # threshold, eşik değer
+up_limit = q3 + th * iqr      # outlier üst limit
+low_limit = q1 - th * iqr     # outlier alt limit
 
 df[(df["Age"] < low_limit) | (df["Age"] > up_limit)] # outlier values
 df[(df["Age"] < low_limit) | (df["Age"] > up_limit)].index # outlier index
@@ -117,6 +118,18 @@ grab_outliers(df, "Age")
 grab_outliers(df, "Age", True)
 age_index = grab_outliers(df, "Age", True)
 
+
+###############################################################
+### Aykırı Değer Problemini Çözmek
+###############################################################
+
+df.shape
+low, up = outlier_thresholds(df, "Age")
+l, u = outlier_thresholds(df, "Fare")
+
+df[~((df["Fare"] < l) | (df["Fare"] > u))] # aykırı olmayan değerler
+df[~((df["Fare"] < l) | (df["Fare"] > u))].shape # aykırı olmayan değerlerin shape i
+
 ###############################################################
 ### SİLME VEYA BASKILAMA YÖNTEMLERİNDEN BİRİ KULLANILIR.
 ###############################################################
@@ -136,6 +149,17 @@ for col in num_cols:
 
 df.shape[0] - new_df.shape[0]
 ###############################################################
+
+low, up = outlier_thresholds(df, "Age")
+l, u = outlier_thresholds(df, "Fare")
+
+# aykırı değerleri seçme işlemi
+df[((df["Fare"] < l) | (df["Fare"] > u))]["Fare"] 
+
+df.loc[((df["Fare"] < l) | (df["Fare"] > u)), "Fare"] 
+
+df.loc[(df["Fare"] < l), "Fare"] = l
+df.loc[(df["Fare"] > u), "Fare"] = u
 
 def replace_with_thresholds(dataframe, variable):
     low_limit, up_limit = outlier_thresholds(dataframe, variable)
@@ -176,8 +200,3 @@ grab_outliers(df, "Age", index=True)    # outlierları getir.
 remove_outlier(df, "Age").shape          # aykırı değerleri silme ama atama yapmadık
 replace_with_thresholds(df, "Age")       # aykırı değerleri baskılama, threshold ile değiştir.
 check_outlier(df, "Age")                 # aykırı değerleri kontrol et.
-
-a = [2,4,6,8]
- 
-for i in a:
-    print(i**2)

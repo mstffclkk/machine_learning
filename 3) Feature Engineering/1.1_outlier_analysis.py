@@ -38,7 +38,7 @@ list(map(lambda x: cat_summary(df, x, plot=False), cat_cols))
 # numerical variables summary
 list(map(lambda x: num_summary(df, x, plot=False), num_cols))
 
-# outlier check
+# check outlier
 for col in num_cols:
     print(col, check_outlier(df, col))
 
@@ -53,4 +53,39 @@ for col in num_cols:
 age_index = grab_outliers(df, "Age", index=True)
 fare_index = grab_outliers(df, "Fare", index=True)
 
+df.shape
+###################################################################
+# remove outlier
+def remove_outlier(dataframe, col_name):
+    low_limit, up_limit = outlier_thresholds(dataframe, col_name)
+    df_without_outliers = dataframe[~((dataframe[col_name] < low_limit) | (dataframe[col_name] > up_limit))]
+    return df_without_outliers
+
+for col in num_cols:
+    new_df = remove_outlier(df, col)
+
+new_df.shape
+
+# or use drop function
+new_dff = df.drop(fare_index, axis=0)
+new_dff.shape
+
+for col in num_cols:
+    new_dff = df.drop(grab_outliers(df, col, index=True), axis=0)
+
+new_dff.shape
+###################################################################
+# Re-assignment with thresholds
+
+# check outlier
+for col in num_cols:
+    print(col, check_outlier(df, col))
+
+# replace with thresholds
+for col in num_cols:
+    replace_with_thresholds(df, col)
+
+# check outlier
+for col in num_cols:
+    print(col, check_outlier(df, col))
 

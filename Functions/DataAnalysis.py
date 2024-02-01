@@ -228,7 +228,7 @@ def grab_outliers(dataframe, col_name, index=False, h=5):
 
     Parameters:
     - dataframe (pandas.DataFrame): The dataframe containing the data.
-    - col_name (str): The name of the column to analyze.
+    - col_name (str): The name of the column to analyze. (for numerical columns)
     - index (bool, optional): Whether to return the indices of the outliers. Default is False.
     - h (int, optional): The number of rows to display when printing outliers. Default is 5.
 
@@ -251,16 +251,18 @@ for col in num_cols:
     print(col, "-->", grab_outliers(df, col, True))  
 
 """
+
 ###################################################################
-# Replace with thresholds
+# Re-assignment with thresholds
 ###################################################################
-def replace_with_thresholds(dataframe, variable, q1=0.05, q3=0.95):
-    low_limit, up_limit = outlier_thresholds(dataframe, variable, q1=0.05, q3=0.95)
-    dataframe.loc[(dataframe[variable] < low_limit), variable] = low_limit
-    dataframe.loc[(dataframe[variable] > up_limit), variable] = up_limit
+def replace_with_thresholds(dataframe, col_name):
+    low_limit, up_limit = outlier_thresholds(dataframe, col_name)
+    dataframe.loc[(dataframe[col_name] < low_limit), col_name] = low_limit
+    dataframe.loc[(dataframe[col_name] > up_limit), col_name] = up_limit
 
 
-"""# Outlier Analysis and Suppression Process
+"""
+# Outlier Analysis and Suppression Process
 for col in df.columns:
     print(col, check_outlier(df, col))
     if check_outlier(df, col):
@@ -269,7 +271,6 @@ for col in df.columns:
 for col in df.columns:
     print(col, check_outlier(df, col))
 """
-
 
 ###################################################################
 # Missing Value Observation
