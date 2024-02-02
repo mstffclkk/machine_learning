@@ -1,5 +1,5 @@
 #############################################
-# Çok Değişkenli Aykırı Değer Analizi: Local Outlier Factor (LOF)
+# Multivariate Outlier Analysis: Local Outlier Factor (LOF)
 #############################################
 
 import numpy as np
@@ -14,45 +14,32 @@ from sklearn.model_selection import train_test_split
 from sklearn.neighbors import LocalOutlierFactor
 from sklearn.preprocessing import MinMaxScaler, LabelEncoder, StandardScaler, RobustScaler
 
+from Functions.DataAnalysis import * 
+
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 pd.set_option('display.width', 500)
 
 df = sns.load_dataset('diamonds')
-df = df.select_dtypes(include=['float64', 'int64'])
-df = df.dropna()            # eksik ddeğerleri sil.
+df = df.select_dtypes(include=['float64', 'int64']) # nümerik değişkenleri seçtik.
+df = df.dropna()            # eksik değerleri sil.
 df.head()
-df.shape
 
-# şuan değişkenlerimiz nümerik !!!!!!!!!!
-def outlier_thresholds(dataframe, col_name, q1=0.25, q3=0.75):
-    quartile1 = dataframe[col_name].quantile(q1)
-    quartile3 = dataframe[col_name].quantile(q3)
-    interquantile_range = quartile3 - quartile1
-    up_limit = quartile3 + 1.5 * interquantile_range
-    low_limit = quartile1 - 1.5 * interquantile_range
-    return low_limit, up_limit
-
-for col in df.columns:
-    print(col, outlier_thresholds(df, col))
-
-def check_outlier(dataframe, col_name):
-    low_limit, up_limit = outlier_thresholds(dataframe, col_name)
-    if dataframe[(dataframe[col_name] > up_limit) | (dataframe[col_name] < low_limit)].any(axis=None):
-        return True
-    else:
-        return False
+check_df(df)
 
 for col in df.columns:
     print(col, check_outlier(df, col))
+
+for col in df.columns:
+    print(col, outlier_thresholds(df, col))
 
 ###################################################################################################
 # aykırı değişkenlerden sadece carat ı seçtik.
 low, up = outlier_thresholds(df, "carat")
 
 # carat değişkeninde kaç outlier var.
-df[((df["carat"] < low) | (df["carat"] > up))]["carat"]        # aykırı değerleri getirir.
+df[((df["carat"] < low) | (df["carat"] > up))]["carat"]       # aykırı değerleri getirir.
 df[((df["carat"] < low) | (df["carat"] > up))].shape           # aykırı değerlerin sayısını getirir.
 
 ###################################################################################################
@@ -63,10 +50,13 @@ low, up = outlier_thresholds(df, "depth")
 df[((df["depth"] < low) | (df["depth"] > up))].shape
 
 # aykırı değerleri tek başına seçtiğimizde herbirinde çok fazla değere ulaştık.
-# çok eğişkenli yaparsak ne olacak?
+# çok değişkenli yaparsak ne olacak?
 ###################################################################################################
 
-##### LOF #####
+for col in df.columns:
+    check_outlier(df, col)
+
+############### LOF ###############
 
 clf = LocalOutlierFactor(n_neighbors=20)    # n_neighbors aranan komşuluk sayısıdır. ön tanımlı 20 olarak kullanılır.
 clf.fit_predict(df)                         # LOF u veri setine uygulanır ve hesaplamalar yapılır.
@@ -74,7 +64,7 @@ clf.fit_predict(df)                         # LOF u veri setine uygulanır ve he
 # Lof değerlerini takip edebilmek için
 df_scores = clf.negative_outlier_factor_    # skorları tutmamızı sağlayan bölüm.
 df_scores[0:5]
-# skorları pozitif değerlerle gözlemlemek isteyenler için.
+# skorları pozitif değerlerle gözlemlemek istersek.
 # df_scores = -df_scores
 
 # skorların negatif olması elbow tekniğinde daha kolay gözlem yapılır. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -84,7 +74,7 @@ np.sort(df_scores)[0:5]                     # skorları sıralı(küçüten büy
 # skorlarda pozitif değerler için 1 e yakın olanlar daha iyi, uzak olanlar daha kötü.
 # skorlarda negatif değerler için -1 e yakın olanlar daha iyi, uzak olanlar daha kötü.
 
-######################### her yerde bulunmaz ##################
+######################### önemli ##################
 # temel bileşen analizinde pci(?) da kullanılan elbow yöntemi.
 
 # elbow yöntemi
@@ -117,9 +107,10 @@ df[df_scores < th].drop(axis=0, labels=df[df_scores < th].index)
 
 # ağaç yöntemleri kullanıyorsak aykırı değerlere hiç dokunmamayı tercih ederiz.
 # illa dokunmak istiyorsak 1-99 5-95 gibi değerler kullanarak tıraşlama yapabiliriz.
+# iqr kullanarak tıraşlama yapabiliriz. (outlier_thresholds fonksiyonu )
 
 # doğrusal yöntemler kullanıyorsak aykırı değerleri(az sayıdaysa) silmek mantıklıdır.
-# ya da tek değişkenli yaklaşıp baskılama yapabiliriz.
+# aykırı değerleri de doldurmak yerine de tek değişkenli yaklaşıp ucundan baskılama yapabiliriz.
 
 
 

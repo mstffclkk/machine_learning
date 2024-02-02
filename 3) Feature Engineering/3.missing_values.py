@@ -5,8 +5,6 @@
 #############################################
 # Eksik Değerlerin Yakalanması
 #############################################
-
-
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -26,7 +24,7 @@ pd.set_option('display.width', 500)
 
 
 def load():
-    data = pd.read_csv("/home/mustafa/PycharmProjects/pythonProject/github_repo/Miuul_Machine_Learning_Bootcamp/Datasets/titanic.csv")
+    data = pd.read_csv("/home/mustafa/github_repo/machine_learning/datasets/titanic.csv")
     return data
 
 df = load()

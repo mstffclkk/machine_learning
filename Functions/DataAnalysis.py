@@ -26,7 +26,7 @@ def check_df(dataframe, head=5):
     print(dataframe.isnull().sum())
     print("\n##################### Quantiles #####################")
     print(dataframe.describe([0, 0.05, 0.50, 0.95, 0.99, 1]).T)
-    print("\n##################### Value Counts #####################")
+    print("\n##################### Categorical Value Counts #####################")
     print([dataframe[col].value_counts() for col in dataframe.columns if dataframe[col].nunique() < 10])
 
 ###################################################################
@@ -208,12 +208,21 @@ for col in cat_cols:
 ###################################################################
 # Outlier Control by Thresholds
 ###################################################################
+#def check_outlier(dataframe, col_name):
+#    low_limit, up_limit = outlier_thresholds(dataframe, col_name)
+#    if dataframe[(dataframe[col_name] > up_limit) | (dataframe[col_name] < low_limit)].any(axis=None):
+#        return True
+#    else:
+#        return False
+
 def check_outlier(dataframe, col_name):
-    low_limit, up_limit = outlier_thresholds(dataframe, col_name)
-    if dataframe[(dataframe[col_name] > up_limit) | (dataframe[col_name] < low_limit)].any(axis=None):
+    low, up = outlier_thresholds(dataframe, col_name)
+    if dataframe[((dataframe[col_name] < low) | (dataframe[col_name] > up))].any(axis=None):
+        outlier_df = dataframe[((dataframe[col_name] < low) | (dataframe[col_name] > up))]
+        print(f"{col_name}: {outlier_df.shape[0]} outlier(s) found.")
         return True
-    else:
-        return False
+    return False
+
 """
 for col in num_cols:
     print(col, "-->", check_outlier(df, col))

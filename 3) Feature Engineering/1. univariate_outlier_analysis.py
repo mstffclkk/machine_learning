@@ -128,7 +128,7 @@ low, up = outlier_thresholds(df, "Age")
 l, u = outlier_thresholds(df, "Fare")
 
 df[~((df["Fare"] < l) | (df["Fare"] > u))] # aykırı olmayan değerler
-df[~((df["Fare"] < l) | (df["Fare"] > u))].shape # aykırı olmayan değerlerin shape i
+df[~((df["Fare"] < l) | (df["Fare"] > u))].shape # aykırı olmayan değerlerin sayısı
 
 ###############################################################
 ### SİLME VEYA BASKILAMA YÖNTEMLERİNDEN BİRİ KULLANILIR.
