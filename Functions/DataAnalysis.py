@@ -294,9 +294,6 @@ def missing_values_table(dataframe, na_name=False):
     if na_name:
         return na_columns
 
-"""na_columns = missing_values_table(df, na_name=True)"""
-
-
 ###########################################################################
 # Examining the Relationship of Missing Values ​​with the Dependent Variable
 ###########################################################################

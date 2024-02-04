@@ -17,6 +17,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.neighbors import LocalOutlierFactor
 from sklearn.preprocessing import MinMaxScaler, LabelEncoder, StandardScaler, RobustScaler
 
+from Functions.DataAnalysis import *
+
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
@@ -29,50 +31,32 @@ def load():
 
 df = load()
 df.head()
-
+check_df(df)
 
 df.isnull().values.any()            # eksik gozlem var mı yok mu sorgusu
 df.isnull().sum()                   # degiskenlerdeki toplam eksik deger sayisi
-df.notnull().sum()                  # degiskenlerdeki tam deger sayisi
-df.isnull().sum().sum()             # veri setindeki toplam eksik deger sayisi
-df[df.isnull().any(axis=1)]         # en az bir tane eksik degere sahip olan gözlem birimleri
-df[df.notnull().all(axis=1)]        # tam olan gözlem birimleri
 df.isnull().sum().sort_values(ascending=False)   # Azalan şekilde sıralamak
+df.isnull().sum().sum()             # veri setindeki toplam eksik deger sayisi (kendisinde en az 1 tane eksik deger olan satir sayisi)
+df[df.isnull().any(axis=1)]         # en az bir tane eksik degere sahip olan gözlem birimleri
 (df.isnull().sum() / df.shape[0] * 100).sort_values(ascending=False)    # eksik değişkenlerin tüm veri setine oranı
 na_cols = [col for col in df.columns if df[col].isnull().sum() > 0]     # eksik değerlerin olduğu değişkenler
 
-######################## eksik değerlerin fonksiyonu ##########################
-def missing_values_table(dataframe, na_name=False):
-    na_columns = [col for col in dataframe.columns if dataframe[col].isnull().sum() > 0]                    # eksik değerlerin seçimi
-
-    n_miss = dataframe[na_columns].isnull().sum().sort_values(ascending=False)                              # sayısı
-    ratio = (dataframe[na_columns].isnull().sum() / dataframe.shape[0] * 100).sort_values(ascending=False)  # oranı
-    missing_df = pd.concat([n_miss, np.round(ratio, 2)], axis=1, keys=['n_miss', 'ratio'])                  # birleştirme
-    print(missing_df, end="\n")
-
-    if na_name:
-        return na_columns
-
-
-missing_values_table(df)
-
-missing_values_table(df, True)
-
-
+df.notnull().sum()                  # degiskenlerdeki tam deger sayisi
+df[df.notnull().all(axis=1)]        # tam olan gözlem birimleri
 
 ###################################################################################
 # Eksik Değer Problemini Çözme
 ###################################################################################
-# eğer ağaca dayalı yöntemler kullanıılıyosa, missin values tıpkı outlier value ler gibi etkisi göz ardı edilebilir durumlardır.
+# eğer ağaca dayalı yöntemler kullanıılıyosa, eksik değerler
+# tıpkı aykırı değerlerdeki gibi etkisi göz ardı edilebilir durumlardır.
 
 missing_values_table(df)
+missing_values_table(df, True)
 
 ############################################################################
 # Çözüm 1: Hızlıca silmek
 ############################################################################
-
-
-# gözlem sayısı çok fazla olduğunda
+# gözlem sayısı çok fazla olduğunda kullanılabilir.
 df.dropna().shape
 
 ############################################################################
@@ -86,7 +70,8 @@ df["Age"].fillna(df["Age"].mean()).isnull().sum()
 df["Age"].fillna(df["Age"].median()).isnull().sum()
 df["Age"].fillna(0).isnull().sum()
 
-# df.apply(lambda x: x.fillna(x.mean()), axis=0)  # object old için hata veriyor.
+# df.apply(lambda x: x.fillna(x.mean()), axis=0)  
+# kategorik değişkenler de olduğu için hata veriyor.
 
 ###### SAYISAL DEĞİŞKENLERİ fonksiyon kullanarak doldurmak için  ######
 df.apply(lambda x: x.fillna(x.mean()) if x.dtype != "O" else x, axis=0).head()
@@ -118,22 +103,23 @@ df.apply(lambda x: x.fillna(x.mode()[0]) if (x.dtype == "O" and len(x.unique()) 
 # cinsiyete göre titanic veri setini groupby a al.
 # bu verilerin içinden yaş değişkenini seç ve ortalamasını al.
 df.groupby("Sex")["Age"].mean()
+df.groupby("Sex").agg({"age": "mean"})
 
 df["Age"].mean()
 
 """
 Amaç: Eksik değer doldurmak
-    Yaş ortalaması:
+    Yaş ortalamasi:
     >>> df["Age"].mean() --> 29.69911764705882  
 
-    Cinsiyete göre yaş ortalaması:
+    Cinsiyete göre yaş ortalamasi:
     >>> df.groupby("Sex")["Age"].mean()
     Sex
     female    27.915709
     male      30.726645
 
-    Kadınlarda eksik değer varsa farklı, erkeklerde eksik değer varsa farklı doldurma işlemi
-    yapmak, direk yaş ortalamasını alıp(29) ona göre eksik değer doldurmaktan daha mantıklıdır !!
+    Kadinlarda eksik değer varsa farkli, erkeklerde eksik değer varsa farkli doldurma işlemi
+    yapmak, direk yaş ortalamasini alip(29) ona göre eksik değer doldurmaktan daha mantiklidir !!
 
 """
 
@@ -142,18 +128,15 @@ df["Age"].fillna(df.groupby("Sex")["Age"].transform("mean")).isnull().sum()
 
 ## bu işlemin loc karşılığı.
 
-df.loc[(df["Age"].isnull()) & (df["Sex"]=="female")]   # 1- yaş değişkeninde eksiklik olup cinsiyeti kadın olanlar.
-df.groupby("Sex")["Age"].mean()["female"]              # 2- groupby kırılımında ki ortalamalardan kadınların ort seçmek.
-df.loc[(df["Age"].isnull()) & (df["Sex"]=="female"), "Age"] # 3 - yaş değişkenini seçmiş olduk
-
+df.loc[(df["Age"].isnull()) & (df["Sex"]=="female")]                                                    # 1- yaş değişkeninde eksiklik olup cinsiyeti kadın olanlar.
+df.groupby("Sex")["Age"].mean()["female"]                                                               # 2- groupby kırılımında ki ortalamalardan kadınların ort seçmek.
+df.loc[(df["Age"].isnull()) & (df["Sex"]=="female"), "Age"]                                             # 3 - yaş değişkenini seçmiş olduk
 df.loc[(df["Age"].isnull()) & (df["Sex"]=="female"), "Age"] = df.groupby("Sex")["Age"].mean()["female"] # 4- ve atama işlemi
+
 df.loc[(df["Age"].isnull()) & (df["Sex"]=="male"), "Age"] = df.groupby("Sex")["Age"].mean()["male"]
 df.isnull().sum()
 
 #######################################################################################################################################
-
-
-
 ##########################################################################################
 # Çözüm 3: Tahmine Dayalı Atama ile Doldurma
 ##########################################################################################
@@ -162,13 +145,13 @@ df.isnull().sum()
 # diğer değişkenelr: bağımsız değişken
 
 df = load()
+df.head()
 
 cat_cols, num_cols, cat_but_car = grab_col_names(df)
 num_cols = [col for col in num_cols if col not in "PassengerId"]
 
 # 2 sınıf veya daha fazla sınıfa sahip kategorik işlemleri nümerik şekilde ifade etmek.
-dff = pd.get_dummies(df[cat_cols + num_cols], drop_first=True)
-
+dff = pd.get_dummies(df[cat_cols + num_cols], drop_first=True, dtype=int)
 dff.head()
 
 # değişkenlerin standartşatırılması
@@ -191,7 +174,7 @@ dff = pd.DataFrame(scaler.inverse_transform(dff), columns=dff.columns)
 # doldurulan değerleri karşılaştırmak için(nereye ne atandı)
 df["age_imputed_knn"] = dff[["Age"]]
 
-df.loc[df["Age"].isnull(), ["Age", "age_imputed_knn"]]
+df.loc[df["Age"].isnull(), ["Age", "age_imputed_knn"]].head()
 df.loc[df["Age"].isnull()]
 
 
