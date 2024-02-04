@@ -285,6 +285,17 @@ for col in df.columns:
 # Missing Value Observation
 ###################################################################
 def missing_values_table(dataframe, na_name=False):
+    """
+    Prints a table showing the number and percentage of missing values in each column of the given dataframe.
+
+    Parameters:
+    - dataframe: The pandas DataFrame to analyze.
+    - na_name (optional): If True, returns a list of column names with missing values.
+
+    Returns:
+    - If na_name is True, returns a list of column names with missing values.
+    - Otherwise, prints the missing values table.
+    """
     na_columns = [col for col in dataframe.columns if dataframe[col].isnull().sum() > 0]
     n_miss = dataframe[na_columns].isnull().sum().sort_values(ascending=False)
     ratio = (dataframe[na_columns].isnull().sum() / dataframe.shape[0] * 100).sort_values(ascending=False)
@@ -298,17 +309,24 @@ def missing_values_table(dataframe, na_name=False):
 # Examining the Relationship of Missing Values ​​with the Dependent Variable
 ###########################################################################
 def missing_vs_target(dataframe, target, na_columns):
+    """
+    Calculate the mean target value and count of each category in na_columns.
+
+    Parameters:
+    dataframe (pandas.DataFrame): The input dataframe.
+    target (str): The name of the target column.
+    na_columns (list): List of column names to analyze.
+
+    Returns:
+    None
+    """
     temp_df = dataframe.copy()
     for col in na_columns:
-        temp_df[col + '_NA_FLAG'] = np.where(temp_df[col].isnull(), 1, 0)
-    na_flags = temp_df.loc[:, temp_df.columns.str.contains("_NA_")].columns
+        temp_df[col + '_NA_FLAG'] = np.where(temp_df[col].isnull(), "NA", "not NA")
+    na_flags = [col for col in temp_df.columns if "_NA_" in col]
     for col in na_flags:
         print(pd.DataFrame({"TARGET_MEAN": temp_df.groupby(col)[target].mean(),
                             "Count": temp_df.groupby(col)[target].count()}), end="\n\n\n")
-
-
-"""missing_vs_target(df, "Outcome", na_columns)"""
-
 
 ###################################################################
 # ENCODING
@@ -317,17 +335,18 @@ def missing_vs_target(dataframe, target, na_columns):
 ## LABEL ENCODING
 
 # Değişkenlerin tiplerine göre ayrılması işlemi
-"""cat_cols, num_cols, cat_but_car = grab_col_names(df)
-"""
+
 def label_encoder(dataframe, binary_col):
     labelencoder = LabelEncoder()
     dataframe[binary_col] = labelencoder.fit_transform(dataframe[binary_col])
     return dataframe
 
-"""binary_cols = [col for col in df.columns if df[col].dtypes == "O" and df[col].nunique() == 2]
+"""
+binary_cols = [col for col in df.columns if df[col].dtypes == "O" and df[col].nunique() == 2]
 
 for col in binary_cols:
-    label_encoder(df, col)"""
+    label_encoder(df, col)
+"""
 
 
 ## ONE - HOT ENCODING

@@ -28,42 +28,28 @@ check_df(df)
 
 
 #############################################
-# Gelişmiş Analizler
+# Advanced Analytics
 #############################################
 
 ###################
-# Eksik Veri Yapısının İncelenmesi
+# Examining the Missing Data Structure
 ###################
 
-msno.bar(df)
+msno.bar(df) # veri setindeki tam gözlem sayısını gösterir.
 plt.show()
 
-msno.matrix(df)
+msno.matrix(df) # downgrade matplotlib to 3.6 or upgrade missingno to 0.5.2
 plt.show()
 
 msno.heatmap(df)
 plt.show()
 
 ###################
-# Eksik Değerlerin Bağımlı Değişken ile İlişkisinin İncelenmesi
+# Examining the Relationship of Missing Values with Dependent Variable
 ###################
 
 missing_values_table(df, True)
 na_cols = missing_values_table(df, True)
-
-
-def missing_vs_target(dataframe, target, na_columns):
-    temp_df = dataframe.copy()
-
-    for col in na_columns:
-        temp_df[col + '_NA_FLAG'] = np.where(temp_df[col].isnull(), 1, 0)
-
-    na_flags = temp_df.loc[:, temp_df.columns.str.contains("_NA_")].columns
-
-    for col in na_flags:
-        print(pd.DataFrame({"TARGET_MEAN": temp_df.groupby(col)[target].mean(),
-                            "Count": temp_df.groupby(col)[target].count()}), end="\n\n\n")
-
 
 missing_vs_target(df, "Survived", na_cols)
 
@@ -75,13 +61,13 @@ missing_vs_target(df, "Survived", na_cols)
 
 df = load()
 na_cols = missing_values_table(df, True)
-# sayısal değişkenleri direk median ile oldurma
+
 df.apply(lambda x: x.fillna(x.median()) if x.dtype != "O" else x, axis=0).isnull().sum()
-# kategorik değişkenleri mode ile doldurma
+
 df.apply(lambda x: x.fillna(x.mode()[0]) if (x.dtype == "O" and len(x.unique()) <= 10) else x, axis=0).isnull().sum()
-# kategorik değişken kırılımında sayısal değişkenleri doldurmak
+
 df["Age"].fillna(df.groupby("Sex")["Age"].transform("mean")).isnull().sum()
-# Tahmine Dayalı Atama ile Doldurma
+
 missing_vs_target(df, "Survived", na_cols)
 
 
