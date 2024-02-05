@@ -5,6 +5,18 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
+# !pip install missingno
+import missingno as msno
+from datetime import date
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import LocalOutlierFactor
+from sklearn.preprocessing import MinMaxScaler, LabelEncoder, StandardScaler, RobustScaler
+
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
+pd.set_option('display.width', 200)
+pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
 ###################################################################
 # Info of DataFrame
@@ -334,8 +346,6 @@ def missing_vs_target(dataframe, target, na_columns):
 
 ## LABEL ENCODING
 
-# Değişkenlerin tiplerine göre ayrılması işlemi
-
 def label_encoder(dataframe, binary_col):
     labelencoder = LabelEncoder()
     dataframe[binary_col] = labelencoder.fit_transform(dataframe[binary_col])
@@ -356,11 +366,8 @@ for col in binary_cols:
 cat_cols
 """
 def one_hot_encoder(dataframe, categorical_cols, drop_first=False):
-    dataframe = pd.get_dummies(dataframe, columns=categorical_cols, drop_first=drop_first)
+    dataframe = pd.get_dummies(dataframe, columns=categorical_cols, drop_first=drop_first, dtype=int)
     return dataframe
-
-"""df = one_hot_encoder(df, cat_cols, drop_first=True)
-"""
 
 ###################################################################
 """# Correlation
