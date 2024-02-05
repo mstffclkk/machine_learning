@@ -8,6 +8,9 @@
 
 from Functions.DataAnalysis import *
 
+def load_application_train():
+    data = pd.read_csv("/home/mustafa/github_repo/dataset/application_train.csv")
+    return data
 
 def load():
     data = pd.read_csv("/home/mustafa/github_repo/machine_learning/datasets/titanic.csv")

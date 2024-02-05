@@ -14,7 +14,7 @@ from sklearn.neighbors import LocalOutlierFactor
 from sklearn.preprocessing import MinMaxScaler, LabelEncoder, StandardScaler, RobustScaler
 
 pd.set_option('display.max_columns', None)
-pd.set_option('display.max_rows', None)
+pd.set_option('display.max_rows', 200)
 pd.set_option('display.width', 200)
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
@@ -32,9 +32,9 @@ def check_df(dataframe, head=5):
     print(dataframe.head(head))
     print("\n##################### Tail #####################")
     print(dataframe.tail(head))
-    print("\n################ Null Values ##################")
+    print("\n################ Any Null Values ##################")
     print(dataframe.isnull().values.any())
-    print("\n##################### NA #####################")
+    print("\n##################### NA Sum #####################")
     print(dataframe.isnull().sum())
     print("\n##################### Quantiles #####################")
     print(dataframe.describe([0, 0.05, 0.50, 0.95, 0.99, 1]).T)
@@ -344,8 +344,9 @@ def missing_vs_target(dataframe, target, na_columns):
 # ENCODING
 ###################################################################
 
+###################################################################
 ## LABEL ENCODING
-
+###################################################################
 def label_encoder(dataframe, binary_col):
     labelencoder = LabelEncoder()
     dataframe[binary_col] = labelencoder.fit_transform(dataframe[binary_col])
@@ -358,16 +359,59 @@ for col in binary_cols:
     label_encoder(df, col)
 """
 
-
+###################################################################
 ## ONE - HOT ENCODING
-
+###################################################################
 # cat_cols listesinin güncelleme işlemi
-"""cat_cols = [col for col in cat_cols if col not in binary_cols and col not in ["OUTCOME"]]
+"""
+cat_cols = [col for col in cat_cols if col not in binary_cols and col not in ["OUTCOME"]]
 cat_cols
 """
-def one_hot_encoder(dataframe, categorical_cols, drop_first=False):
+def one_hot_encoder(dataframe, categorical_cols, drop_first=True):
     dataframe = pd.get_dummies(dataframe, columns=categorical_cols, drop_first=drop_first, dtype=int)
     return dataframe
+
+###################################################################
+## Rare Analyser
+###################################################################
+# bağımlı değişken ile kategroik değişkenin ilişkisini göstermek için bir fonk.
+def rare_analyser(dataframe, target, cat_cols):
+    for col in cat_cols:
+        print(col, ":", len(dataframe[col].value_counts()))
+        print(pd.DataFrame({"COUNT": dataframe[col].value_counts(),
+                            "RATIO": dataframe[col].value_counts() / len(dataframe),
+                            "TARGET_MEAN": dataframe.groupby(col)[target].mean()}), end="\n\n\n")
+
+###################################################################
+## RARE ENCODING
+###################################################################
+"""
+    rare_perc: rare orani.
+    rare_columns: fonksiyona girilen rare oranin'dan daha düşük sayida herhangi bir bu kategorik değişkenin sinif 
+                  orani varsa ve bu ayni zamanda bir kategorik değişken ise bunlari rare kolonu olarak seç.
+    temp_df[col].value_counts(): kategorik değişkenlerin frekanslari, sayisi.
+    len(temp_df): toplam gözlem sayisi.
+    temp_df[col].value_counts() / len(temp_df): bu değişkenlerin orani.
+    any(axis=None): herhangi bir tanesi
+
+    usage:
+    new_df = rare_encoder(df, 0.01)
+    rare_analyser(new_df, "TARGET", cat_cols)
+
+""" 
+def rare_encoder(dataframe, rare_perc):
+    
+    temp_df = dataframe.copy()
+
+    rare_columns = [col for col in temp_df.columns if temp_df[col].dtypes == 'O'
+                    and (temp_df[col].value_counts() / len(temp_df) < rare_perc).any(axis=None)]
+
+    for var in rare_columns:
+        tmp = temp_df[var].value_counts() / len(temp_df)
+        rare_labels = tmp[tmp < rare_perc].index
+        temp_df[var] = np.where(temp_df[var].isin(rare_labels), 'Rare', temp_df[var])
+
+    return temp_df
 
 ###################################################################
 """# Correlation

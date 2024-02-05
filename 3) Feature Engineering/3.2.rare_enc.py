@@ -3,11 +3,11 @@
 #############################################
 
 # Rare Encoding: Bir df deki sınıfların countlarını aldığımızı düşünürsek, bu sınıfların sayıca az olanlarını encode etmek
-# bize bir fayda sağlamayacaktır. Çünkü herhang bir vasıfları yoktur aslında. O yüzden rare olarak adlandıırıp df ye atarız.
+# bize bir fayda sağlamayacaktır. Çünkü herhangi bir vasıfları yoktur aslında. O yüzden rare olarak adlandırıp df ye atarız.
 
 # 1. Kategorik değişkenlerin azlık çokluk durumunun analiz edilmesi.
 # 2. Rare kategoriler ile bağımlı değişken arasındaki ilişkinin analiz edilmesi.
-# 3. Rare encoder yazacağız.
+# 3. Rare encoder yazılması.
 
 
 ###################
@@ -16,27 +16,57 @@
 
 from Functions.DataAnalysis import *
 
-
-def load():
-    data = pd.read_csv("/home/mustafa/github_repo/machine_learning/datasets/titanic.csv")
+def load_application_train():
+    data = pd.read_csv("/home/mustafa/github_repo/dataset/application_train.csv")
     return data
 
 df = load_application_train()
+df.head()
+check_df(df)
+
 df["NAME_EDUCATION_TYPE"].value_counts()
 
-# df deki kategorik değişkenleri seç.
 cat_cols, num_cols, cat_but_car = grab_col_names(df)
-
-
-# kategorik değişkenlerin sınıflarını ve bu sınıfların oranlarını getiren fonk.
-def cat_summary(dataframe, col_name, plot=False):
-    print(pd.DataFrame({col_name: dataframe[col_name].value_counts(),
-                        "Ratio": 100 * dataframe[col_name].value_counts() / len(dataframe)}))
-    print("##########################################")
-    if plot:
-        sns.countplot(x=dataframe[col_name], data=dataframe)
-        plt.show()
-
 
 for col in cat_cols:
     cat_summary(df, col)
+
+###################
+# 2. Rare kategoriler ile bağımlı değişken arasındaki ilişkinin analiz edilmesi.
+###################
+
+df["NAME_INCOME_TYPE"].value_counts()
+
+df.groupby("NAME_INCOME_TYPE")["TARGET"].mean()
+
+rare_analyser(df, "TARGET", cat_cols)
+
+#############################################
+# 3. Rare encoder
+#############################################
+"""
+    rare_perc: rare orani.
+    rare_columns: fonksiyona girilen rare oranin'dan daha düşük sayida herhangi bir bu kategorik değişkenin sinif orani varsa
+                  ve bu ayni zamanda bir kategorik değişken ise bunlari rare kolonu olarak seç.
+    temp_df[col].value_counts(): kategorik değişkenlerin frekanslari, sayisi.
+    len(temp_df): toplam gözlem sayisi.
+    temp_df[col].value_counts() / len(temp_df): bu değişkenlerin orani.
+    any(axis=None): herhangi bir tanesi
+""" 
+def rare_encoder(dataframe, rare_perc):
+    
+    temp_df = dataframe.copy()
+
+    rare_columns = [col for col in temp_df.columns if temp_df[col].dtypes == 'O'
+                    and (temp_df[col].value_counts() / len(temp_df) < rare_perc).any(axis=None)]
+
+    for var in rare_columns:
+        tmp = temp_df[var].value_counts() / len(temp_df)
+        rare_labels = tmp[tmp < rare_perc].index
+        temp_df[var] = np.where(temp_df[var].isin(rare_labels), 'Rare', temp_df[var])
+
+    return temp_df
+
+new_df = rare_encoder(df, 0.01)
+
+rare_analyser(new_df, "TARGET", cat_cols)
