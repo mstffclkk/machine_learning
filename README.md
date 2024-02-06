@@ -3,32 +3,32 @@
 
 ## 1) Python Programming for Data Science - Part 1
 ### Topics
-- [X] Working Environment Settings
-- [X] Data Structures
-- [X] Functions
-- [X] Loops
-- [X] Comprehensions
+✅ Working Environment Settings
+✅ Data Structures
+✅ Functions
+✅ Loops
+✅ Comprehensions
 ### Homework
-- [X] Virtual Environment creation  
-- [X] Python Exercises 
+✅ Virtual Environment creation  
+✅ Python Exercises 
 
 
 ## 2) Python Programming for Data Science - Part 2
 ### Topics
-- [X] Data Analysis with Python: Numpy
-- [X] Data Analysis with Python : Pandas
-- [X] Data Analysis with Python: Data Visualization
-- [X] Data Analysis with Python: Advanced Functional Exploratory Data Analysis
+✅ Data Analysis with Python: Numpy
+✅ Data Analysis with Python : Pandas
+✅ Data Analysis with Python: Data Visualization
+✅ Data Analysis with Python: Advanced Functional Exploratory Data Analysis
 ### Homework and Projects
-- [X] Pandas Exercises 
-- [X] Rule-Based Classification 
+✅ Pandas Exercises 
+✅ Rule-Based Classification 
 
 
 ## 3) Feature Engineering 
 ### Topics
-- [X] Outliers
-- [X] Missing Values
-- [X] Encoding Scaling
+✅ Outliers
+✅ Missing Values
+✅ Encoding Scaling
 - [ ] Feature Extraction
 ### Homework and Projects
 - [ ] Diabetes Data Feature Engineering 
