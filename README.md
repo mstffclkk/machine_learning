@@ -4,6 +4,7 @@
 ## 1) Python Programming for Data Science - Part 1
 ### Topics
 ✅ Working Environment Settings
+
 ✅ Data Structures
 ✅ Functions
 ✅ Loops
