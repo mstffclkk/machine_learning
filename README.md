@@ -2,7 +2,7 @@
 ---
 
 ## 1) Python Programming for Data Science - Part 1
-### Topics
+### - Topics
 ✅ Working Environment Settings
 
 ✅ Data Structures
@@ -13,14 +13,14 @@
 
 ✅ Comprehensions
 
-### Homework
+### - Homework
 ✅ Virtual Environment creation  
 
 ✅ Python Exercises 
 
 
 ## 2) Python Programming for Data Science - Part 2
-### Topics
+### - Topics
 ✅ Data Analysis with Python: Numpy
 
 ✅ Data Analysis with Python : Pandas
@@ -29,13 +29,13 @@
 
 ✅ Data Analysis with Python: Advanced Functional Exploratory Data Analysis
 
-### Homework and Projects
+### - Homework and Projects
 ✅ Pandas Exercises 
 
 ✅ Rule-Based Classification 
 
 ## 3) Feature Engineering 
-### Topics
+### - Topics
 ✅ Outliers
 
 ✅ Missing Values
@@ -44,39 +44,39 @@
 
 - [ ] Feature Extraction
 
-### Homework and Projects
+### - Homework and Projects
 
-☑ Diabetes Data Feature Engineering 
+- [ ] Diabetes Data Feature Engineering 
 
-☑ Telco Customer Abandoned Feature Engineering 
+- [ ] Telco Customer Abandoned Feature Engineering 
 
 ## 4) Machine Learning  
-### Topics
+### - Topics
 
-☑ Basic concepts
+- [ ] Basic concepts
 
-☑ Linear Regression  
+- [ ] Linear Regression  
 
-☑ Logistic Regression
+- [ ] Logistic Regression
 
-☑ Project : Sales Prediction with Linear Regression
+- [ ] Project : Sales Prediction with Linear Regression
 
-☑ KNN
+- [ ] KNN
 
-☑ CART
+- [ ] CART
 
-☑ Advanced Tree Methods
+- [ ] Advanced Tree Methods
 
-☑ Unsupervised Learning
+- [ ] Unsupervised Learning
 
-☑ Machine Learning Pipeline
+- [ ] Machine Learning Pipeline
 
-###  Homework and Projects:
+###  - Homework and Projects:
 
-☑ Creating a Salary Forecast Model
+- [ ] Creating a Salary Forecast Model
 
-☑ Creating a House Price Prediction Model
+- [ ] Creating a House Price Prediction Model
 
-☑ Creating a Telco Customer Abandonment Model
+- [ ] Creating a Telco Customer Abandonment Model
 
-☑ Customer Segmentation with Unsupervised Learning
+- [ ] Customer Segmentation with Unsupervised Learning
