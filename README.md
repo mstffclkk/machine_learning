@@ -42,7 +42,7 @@
 
 ✅ Encoding Scaling
 
-☑ Feature Extraction
+- [ ] Feature Extraction
 
 ### Homework and Projects
 
