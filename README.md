@@ -13,7 +13,7 @@
 
 ✅ Comprehensions
 
-### - Homework
+### - Exercises
 ✅ Virtual Environment creation  
 
 ✅ Python Exercises 
@@ -29,7 +29,7 @@
 
 ✅ Data Analysis with Python: Advanced Functional Exploratory Data Analysis
 
-### - Homework and Projects
+### - Projects
 ✅ Pandas Exercises 
 
 ✅ Rule-Based Classification 
@@ -44,7 +44,7 @@
 
 - [ ] Feature Extraction
 
-### - Homework and Projects
+### - Projects
 
 - [ ] Diabetes Data Feature Engineering 
 
@@ -71,7 +71,7 @@
 
 - [ ] Machine Learning Pipeline
 
-###  - Homework and Projects:
+###  - Projects:
 
 - [ ] Creating a Salary Forecast Model
 
