@@ -1,13 +1,7 @@
 #############################################
 # Feature Scaling (Özellik Ölçeklendirme)  
 #############################################
-""" 
-1- Tüm değişkenleri eşit şartlar altinda değerlendirebilmek adina ölçeklendirmektir.
-  (Kullanilacak olan yöntemlere değişkenleri gönderirken onlara eşit muamele yapilmasi gerektiğini bildirmek için)
-2- Özellikle gradient decent kullanan algoritmalarin train sürelerini, yani eğitim sürelerini kisaltmak için.
-3- Uzaklik temelli yöntemlerde yanliliğin önüne geçmek için
 
-"""
 ###################
 # StandardScaler: Klasik standartlaştırma. Ortalamayı çıkar, standart sapmaya böl. z = (x - u) / s (yaygın)
 ###################

@@ -1,72 +1,45 @@
-
 #############################################
 # Feature Extraction (Özellik Çıkarımı)
 #############################################
-"""
-Feature extraction (özellik çıkarımı), ham veriden özellik (feature, değişken) üretmek. 2 çeşittir: 
-
-1.  Yapısal verilerden değişken türetmek: var olan bazı değişkenler üzerinden yeni değişkenler türetmek
-2.  Yapısal olmayan verilerden değişken üretmek: bilgisayarın anlayamayacağı metinsel veya görsel verilerden anlamlı değişkenler üretmek
-"""
+ 
 #############################################
 # Binary Features: Flag, Bool, True-False
 #############################################
-"""
-Var olan değişkenin içinden yeni değişkenler türetmek (1 / 0 şeklinde)
+# Var olan değişkenin içinden 1-0 şeklinde yeni değişkenler türetmek
 
-Dikkat! Yeni değişkenler üretmek istiyoruz, var olan değişkeni değiştirmek değil (bu encoding işlemi oluyor).
-"""
+from Functions.DataAnalysis import *
+
+def load():
+    data = pd.read_csv("/home/mustafa/github_repo/machine_learning/datasets/titanic.csv")
+    return data
+
 df = load()
 df.head()
 
-df["NEW_CABIN_BOOL"] = df["Cabin"].notnull().astype('int64')
+#########################################################3
+# binarize edilmiş bir değişken oluşturduk.
+df["NEW_CABIN_BOOL"] = df["Cabin"].notnull().astype('int')
 
-#Şimdi bu yeni oluşturduğumuz değişkenin, bağımlı değişkene göre oranını inceleyelim
+# yeni feature ile bağımlı değişken arasındaki ilişki.
 df.groupby("NEW_CABIN_BOOL").agg({"Survived": "mean"})
 
-# Şimdi bu yeni oluşturduğumuz değişkenin, bağımlı değişkene göre oranını inceleyelim (yeni feature ile bağımlı değişken oranı)
-
 from statsmodels.stats.proportion import proportions_ztest
-"""
-count: başarı sayısı
-nobs: gözlem sayısı
 
-test_stat, pvalue = proportions_ztest(count=[df.loc[df["NEW_CABIN_BOOL"] == 1, "Survived"].sum(),   --> kabin numarası olan ve hayatta kalan kişi sayısı
-                                             df.loc[df["NEW_CABIN_BOOL"] == 0, "Survived"].sum()],  --> kabin numarası olmayan ve hayatta kalan kişi sayısı        
+# count: başarı sayısı
+# nobs: gözlem sayısı
 
-                                      nobs=[df.loc[df["NEW_CABIN_BOOL"] == 1, "Survived"].shape[0], --> kabin numarası olan kişi sayısı
-                                            df.loc[df["NEW_CABIN_BOOL"] == 0, "Survived"].shape[0]])--> kabin numarası olmayan kişi sayısı
-"""
+test_stat, pvalue = proportions_ztest(count=[df.loc[df["NEW_CABIN_BOOL"] == 1, "Survived"].sum(),    # kabin numarası olan ve hayatta kalan kişi sayısı
+                                             df.loc[df["NEW_CABIN_BOOL"] == 0, "Survived"].sum()],   # kabin numarası olmayan ve hayatta kalan kişi sayısı        
 
-################## oran testi ##################
-test_stat, pvalue = proportions_ztest(count=[df.loc[df["NEW_CABIN_BOOL"] == 1, "Survived"].sum(),
-                                             df.loc[df["NEW_CABIN_BOOL"] == 0, "Survived"].sum()],
-
-                                      nobs=[df.loc[df["NEW_CABIN_BOOL"] == 1, "Survived"].shape[0],
-                                            df.loc[df["NEW_CABIN_BOOL"] == 0, "Survived"].shape[0]])
+                                      nobs=[df.loc[df["NEW_CABIN_BOOL"] == 1, "Survived"].shape[0],  # kabin numarası olan kişi sayısı
+                                            df.loc[df["NEW_CABIN_BOOL"] == 0, "Survived"].shape[0]]) # kabin numarası olmayan kişi sayısı
 
 print('Test Stat = %.4f, p-value = %.4f' % (test_stat, pvalue))
-"""
-Output: Test Stat = 9.4597, p-value = 0.0000
-Proportion z testinin hipotezi (h0), p1 ve p2 oranları arasında fark yoktur der. p1 ve p2 oranları,
-iki grubun, yani şu anki senaryoda cabin numarası olanların ve olmayanların hayatta kalma oranları.
-İkisi arasında fark yoktur diyen hipotez, p-value değeri 0.05'ten küçük olduğundan dolayı geçersiz olmuş olur.
-Yani bizim oluşturduğumuz değişkenden elde ettiğimiz oranların aralarında istatistiki olarak anlamlı bir farklılık var gibi gözüküyor.
-(çünkü yukarıda p-value değerimiz 0 çıktı, <0.05)
 
-
-Şimdi aynı şeyi başka bir değişken üzerinden yapalım.
-Veriseti içerisinde SibSp ve Parch değişkenleri bulunuyor.
-Bu değişkenler, o kişinin gemi içerisinde kaç tane yakını olduğunun bilgisini veren değişkenler.
-Yeni bir değişken oluşturalım ve bu iki değişkenin toplamına göre, kişinin o teknede yalnız olup olmadığının bilgisini versin.
-"""
-
-# SibSp: yakın akrabalık, Parch: uzak akrabalık
+#########################################################
 df.loc[((df['SibSp'] + df['Parch']) > 0), "NEW_IS_ALONE"] = "NO"
 df.loc[((df['SibSp'] + df['Parch']) == 0), "NEW_IS_ALONE"] = "YES"
-
 df.groupby("NEW_IS_ALONE").agg({"Survived": "mean"})
-
 
 test_stat, pvalue = proportions_ztest(count=[df.loc[df["NEW_IS_ALONE"] == "YES", "Survived"].sum(),
                                              df.loc[df["NEW_IS_ALONE"] == "NO", "Survived"].sum()],
@@ -75,11 +48,7 @@ test_stat, pvalue = proportions_ztest(count=[df.loc[df["NEW_IS_ALONE"] == "YES",
                                             df.loc[df["NEW_IS_ALONE"] == "NO", "Survived"].shape[0]])
 
 print('Test Stat = %.4f, p-value = %.4f' % (test_stat, pvalue))
-"""
-Output: `Test Stat = -6.0704, p-value = 0.0000`
-
-p-value değerine bakıldığında h0 hipotezinin yine geçersiz olduğu görülür. Yani iki oran arasında istatistiki bir fark vardır.
-"""
+  
 #############################################
 # Text'ler Üzerinden Özellik Türetmek
 #############################################
