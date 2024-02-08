@@ -15,7 +15,7 @@ from sklearn.preprocessing import MinMaxScaler, LabelEncoder, StandardScaler, Ro
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', 200)
-pd.set_option('display.width', 200)
+pd.set_option('display.width', 300)
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
 ###################################################################
@@ -156,7 +156,8 @@ def num_summary(dataframe, numerical_col, plot=False):
         plt.xlabel(numerical_col)
         plt.title(numerical_col)
         plt.show(block=True)
-
+        
+        
 """
 for col in num_cols:
     num_summary(df, col, plot=True)

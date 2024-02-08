@@ -1,10 +1,9 @@
-
 #############################################
 # Date Değişkenleri Üretmek
 #############################################
 # amaç: timestap üzerinden değişken üretmek.
 
-dff = pd.read_csv("D:\\Users\\mstff\\PycharmProjects\\pythonProject\\datasets\\course_reviews.csv")
+dff = pd.read_csv("/home/mustafa/github_repo/machine_learning/datasets/course_reviews.csv")
 dff.head()
 dff.info()
 

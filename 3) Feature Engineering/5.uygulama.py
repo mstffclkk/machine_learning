@@ -1,10 +1,15 @@
-
-
 #############################################
 # Titanic Uçtan Uca Feature Engineering & Data Preprocessing
 #############################################
 # Amaç: insanların hayatta kalıp kalamayacağını titanic veri seti üzerinden modellemek.
+from Functions.DataAnalysis import *
 
+def load():
+    data = pd.read_csv("/home/mustafa/github_repo/machine_learning/datasets/titanic.csv")
+    return data
+
+df = load()
+df.head()
 df = load()
 df.shape
 df.head()

@@ -1,12 +1,17 @@
-
-
 #############################################
 # Feature Interactions (Özellik Etkileşimleri)
 #############################################
-df = load()
+# Feature Interaction, değişkenlerin birbirleri ile etkileşime girmesi demektir.
+# 2 değişkenin çarpımı, bölümü, karesi, küpü gibi işlemlerle yeni değişkenler üretilebilir.
+
+from Functions.DataAnalysis import *
+
+def load():
+    data = pd.read_csv("/home/mustafa/github_repo/machine_learning/datasets/titanic.csv")
+    return data
+df = load() 
 df.head()
 
-# Feature Interaction, değişkenlerin birbirleri ile etkileşime girmesi demektir.
 
 df["NEW_AGE_PCLASS"] = df["Age"] * df["Pclass"]
 
