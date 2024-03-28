@@ -57,8 +57,25 @@ def sum(num1, num2):
 numbers = [1,2,3,4,5,6,7,8,9,10]
 result = reduce(sum, numbers)
 
+# loc ve iloc fonksiyonları
+# Syntax: dataframe.loc[satır_etiketi, sütun_etiketi]
+# Syntax: dataframe.iloc[satır_konumu, sütun_konumu]
+import pandas as pd
 
+# Örnek bir veri çerçevesi oluşturalım
+data = {'A': [1, 2, 3, 4, 5],
+        'B': [6, 7, 8, 9, 10],
+        'C': [11, 12, 13, 14, 15]}
 
+df = pd.DataFrame(data)
+
+# loc kullanımı
+print(df.loc[0, 'A'])  # İlk satırın 'A' sütunundaki değer
+print(df.loc[:, 'B'])  # 'B' sütununun tüm satırları
+
+# iloc kullanımı
+print(df.iloc[0, 1])  # İlk satırın ikinci sütunundaki değer
+print(df.iloc[:, 2])  # İkinci sütunun tüm satırları
 
 
 

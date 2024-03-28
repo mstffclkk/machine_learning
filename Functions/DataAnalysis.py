@@ -8,10 +8,16 @@ from matplotlib import pyplot as plt
 # !pip install missingno
 import missingno as msno
 from datetime import date
+
 from sklearn.metrics import accuracy_score
-from sklearn.model_selection import train_test_split
 from sklearn.neighbors import LocalOutlierFactor
 from sklearn.preprocessing import MinMaxScaler, LabelEncoder, StandardScaler, RobustScaler
+
+# Linear Regression
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+from sklearn.model_selection import train_test_split, cross_val_score
+
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', 200)
